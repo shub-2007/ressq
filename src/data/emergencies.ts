@@ -9,31 +9,86 @@ import {
   Activity, 
   AlertTriangle, 
   Stethoscope,
-  AlertCircle
+  AlertCircle,
+  Ambulance
 } from 'lucide-react';
-
-export type EmergencyType = 'cardiac-arrest' | 'fracture' | 'bleeding' | 'drowning' | 'electric-shock' | 'burns' | 'heatstroke' | 'snake-bite' | 'seizure' | 'choking';
-
-export interface Step {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  warning?: string;
-  noKitAlternative?: string;
-}
-
-export interface EmergencyGuide {
-  id: EmergencyType;
-  title: string;
-  icon: any; // Lucide icon component
-  color: string;
-  signs: string[];
-  steps: Step[];
-  childSteps?: Step[];
-}
+import { EmergencyGuide } from '@/types';
 
 export const emergencies: EmergencyGuide[] = [
+  {
+    id: 'road-accident',
+    title: 'Road Accident',
+    icon: Ambulance,
+    color: 'bg-slate-800 text-slate-100',
+    signs: [
+      'Collision or impact',
+      'Visible injuries or bleeding',
+      'Unconsciousness or confusion'
+    ],
+    steps: [
+      {
+        id: 'accident-1',
+        title: 'Ensure Safety',
+        description: 'Ensure the accident scene is safe before approaching the victim (check for traffic, fire, or fuel leaks).',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Ensure+Safety',
+      },
+      {
+        id: 'accident-2',
+        title: 'Call Emergency',
+        description: 'Call emergency services immediately 108 or 112.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Call+Emergency',
+      },
+      {
+        id: 'accident-3',
+        title: 'Check Consciousness',
+        description: 'Check if the victim is conscious and breathing.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Check+Consciousness',
+      },
+      {
+        id: 'accident-4',
+        title: 'CPR if Needed',
+        description: 'If the victim is not breathing, begin CPR immediately.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=CPR+if+Needed',
+      },
+      {
+        id: 'accident-5',
+        title: 'Stop Bleeding',
+        description: 'If there is heavy bleeding, apply firm pressure using cloth or bandage.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Stop+Bleeding',
+      },
+      {
+        id: 'accident-6',
+        title: 'Do Not Move',
+        description: 'Do NOT move the victim unnecessarily, especially if neck or spine injury is suspected.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Do+Not+Move',
+        warning: 'Moving a person with spinal injury can cause permanent paralysis.'
+      },
+      {
+        id: 'accident-7',
+        title: 'Keep Calm',
+        description: 'If the victim is conscious, keep them calm and still.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Keep+Calm',
+      },
+      {
+        id: 'accident-8',
+        title: 'Recovery Position',
+        description: 'If vomiting or unconscious but breathing, place them in recovery position.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Recovery+Position',
+      },
+      {
+        id: 'accident-9',
+        title: 'Keep Warm',
+        description: 'Keep the victim warm using cloth or blanket.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Keep+Warm',
+      },
+      {
+        id: 'accident-10',
+        title: 'Wait for Help',
+        description: 'Wait with the victim until medical professionals arrive.',
+        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Wait+for+Help',
+      }
+    ]
+  },
   {
     id: 'cardiac-arrest',
     title: 'Cardiac Arrest',
@@ -49,57 +104,57 @@ export const emergencies: EmergencyGuide[] = [
         id: 'cpr-1',
         title: 'Check Response',
         description: 'Check if the person responds by tapping and shouting.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Check+Response',
+        image: '/Image/1.png',
       },
       {
         id: 'cpr-2',
         title: 'Call Emergency',
         description: 'Call emergency services immediately or ask someone nearby to call.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Call+Emergency',
+        image: '/Image/2.png',
         noKitAlternative: 'Use phone speaker mode to follow instructions while doing compressions.'
       },
       {
         id: 'cpr-3',
         title: 'Position Person',
         description: 'Place the person flat on their back on a hard surface.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Flat+on+Back',
+        image: '/Image/3.png',
         noKitAlternative: 'Use a hard floor or table for effective chest compressions.'
       },
       {
         id: 'cpr-4',
         title: 'Check Breathing',
         description: 'Check breathing for no more than 10 seconds.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Check+Breathing',
+        image: '/Image/4.png',
       },
       {
         id: 'cpr-5',
         title: 'Start Compressions',
         description: 'Start chest compressions in the center of the chest.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Start+Compressions',
+        image: '/Image/5.png',
       },
       {
         id: 'cpr-6',
         title: 'Compression Technique',
         description: 'Push hard and fast (100–120 compressions per minute).',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Push+Hard+and+Fast',
+        image: '/Image/6.png',
       },
       {
         id: 'cpr-7',
         title: 'Compression Depth',
         description: 'Press about 5–6 cm deep each time.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=5-6cm+Deep',
+        image: '/Image/7.png',
       },
       {
         id: 'cpr-8',
         title: 'Allow Recoil',
         description: 'Allow chest to fully rise after each compression.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Allow+Recoil',
+        image: '/Image/8.png',
       },
       {
         id: 'cpr-9',
         title: 'Continue CPR',
         description: 'Continue compressions until help arrives.',
-        image: 'https://placehold.co/600x400/e2e8f0/1e293b?text=Continue+CPR',
+        image: '/Image/9.png',
       },
       {
         id: 'cpr-10',

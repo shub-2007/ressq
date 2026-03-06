@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { EmergencyGuide } from '@/data/emergencies';
+import { EmergencyGuide } from '@/types';
 import { cn } from '@/lib/utils';
 
 interface EmergencyCardProps {

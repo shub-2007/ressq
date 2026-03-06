@@ -1,4 +1,4 @@
-import { Step } from '@/data/emergencies';
+import { Step } from '@/types';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, PackageOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +14,7 @@ export function StepCard({ step, isNoKitMode, onToggleNoKit }: StepCardProps) {
     <div className="bg-white rounded-[32px] overflow-hidden shadow-xl shadow-slate-200/50 border border-slate-100 h-full flex flex-col">
       {/* Image Area */}
       <div className="relative h-64 bg-slate-50 flex items-center justify-center overflow-hidden">
+        {/* To use a manual image, replace step.image with your image path */}
         <img 
           src={step.image} 
           alt={step.title} 
@@ -41,6 +42,9 @@ export function StepCard({ step, isNoKitMode, onToggleNoKit }: StepCardProps) {
         <h2 className="text-2xl font-bold text-slate-900 leading-tight">
           {step.title}
         </h2>
+
+        {/* Manual Image Placeholder - Uncomment to add a custom image here */}
+        {/* <img src="/path/to/image.jpg" alt="Custom" className="w-full rounded-xl my-2" /> */}
         
         <p className="text-slate-600 text-lg leading-relaxed">
           {step.description}

@@ -1,4 +1,4 @@
-import { Home, BookOpen, Map, User } from 'lucide-react';
+import { Home, BookOpen } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
@@ -8,19 +8,17 @@ export function BottomNav() {
   const navItems = [
     { icon: Home, label: 'Home', path: '/' },
     { icon: BookOpen, label: 'Guides', path: '/guides' },
-    { icon: Map, label: 'Map', path: '/map' },
-    { icon: User, label: 'Profile', path: '/profile' },
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-3 pb-6 z-50 flex justify-between items-center shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
+    <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-100 px-6 py-3 pb-6 z-50 flex items-center shadow-[0_-4px_20px_rgba(0,0,0,0.05)]">
       {navItems.map((item) => {
         const isActive = location.pathname === item.path;
         return (
           <Link 
             key={item.path} 
             to={item.path}
-            className="flex flex-col items-center gap-1"
+            className="flex flex-col items-center gap-1 flex-1"
           >
             <div className={cn(
               "p-2 rounded-full transition-colors",

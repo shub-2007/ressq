@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Search, User, Stethoscope } from 'lucide-react';
-import { emergencies } from '@/data/emergencies';
+import { EmergencyGuide } from '@/types';
+import { fetchEmergencies } from '@/services/emergencyService';
 import { EmergencyCard } from '@/components/EmergencyCard';
 import { Layout } from '@/components/layout/Layout';
 import { TriageModal } from '@/components/TriageModal';
@@ -9,6 +10,23 @@ import { Button } from '@/components/ui/Button';
 export function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isTriageOpen, setIsTriageOpen] = useState(false);
+  const [emergencies, setEmergencies] = useState<EmergencyGuide[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadEmergencies = async () => {
+      try {
+        const data = await fetchEmergencies();
+        setEmergencies(data);
+      } catch (error) {
+        console.error('Failed to load emergencies', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadEmergencies();
+  }, []);
 
   const filteredEmergencies = emergencies.filter(e => 
     e.title.toLowerCase().includes(searchQuery.toLowerCase())
