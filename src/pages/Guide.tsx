@@ -109,6 +109,8 @@ export function Guide() {
   const handleNext = () => {
     if (stepIndex < steps.length - 1) {
       setStepIndex(prev => prev + 1);
+    } else {
+      navigate('/');
     }
   };
 
@@ -181,7 +183,6 @@ export function Guide() {
           </Button>
           <Button 
             onClick={handleNext}
-            disabled={stepIndex === steps.length - 1}
             className="bg-blue-600 hover:bg-blue-700 h-14 rounded-2xl text-lg shadow-lg shadow-blue-600/20"
           >
             {stepIndex === steps.length - 1 ? 'Finish' : 'Next Step'}
