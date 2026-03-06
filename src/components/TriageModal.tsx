@@ -1,57 +1,65 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/Button';
 import { X, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTriage } from '@/hooks/useTriage';
-import { keyMap } from '@/constants';
 
 interface TriageModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+const questions = [
+  {
+    id: 'conscious',
+    text: 'Is the person conscious?',
+    yes: 'bleeding', // Next question or guide
+    no: 'breathing'
+  },
+  {
+    id: 'breathing',
+    text: 'Is the person breathing?',
+    yes: 'recovery', // Recovery position (Seizure guide has this)
+    no: 'cardiac-arrest' // CPR
+  },
+  {
+    id: 'bleeding',
+    text: 'Is there severe bleeding?',
+    yes: 'bleeding',
+    no: 'fracture' // Just an example flow
+  }
+];
+
 export function TriageModal({ isOpen, onClose }: TriageModalProps) {
   const navigate = useNavigate();
-  const { triageFlow, loading, error } = useTriage();
-  const [currentNodeId, setCurrentNodeId] = useState<string | null>(null);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
 
-  useEffect(() => {
-    if (isOpen && triageFlow) {
-      setCurrentNodeId(triageFlow.startNode);
-    }
-  }, [isOpen, triageFlow]);
-
-  const handleAnswer = (answer: boolean | string) => {
-    if (!triageFlow || !currentNodeId) return;
-
-    const currentNode = triageFlow.nodes[currentNodeId];
-    let nextNodeId: string | undefined;
-
-    if (currentNode.type === 'yesno' && typeof answer === 'boolean') {
-      nextNodeId = answer ? currentNode.yes : currentNode.no;
-    } else if (currentNode.type === 'options' && typeof answer === 'string') {
-      nextNodeId = currentNode.options?.[answer];
-    }
-
-    if (nextNodeId) {
-      if (triageFlow.nodes[nextNodeId]) {
-        setCurrentNodeId(nextNodeId);
+  // Simplified logic for demo
+  const handleAnswer = (answer: boolean) => {
+    if (currentQuestionIndex === 0) {
+      if (!answer) {
+        setCurrentQuestionIndex(1); // Check breathing
       } else {
-        // It's a result (protocol key)
-        const guideId = keyMap[nextNodeId];
-        if (guideId) {
-          navigate(`/guide/${guideId}`);
-        } else {
-          console.warn(`No guide found for key: ${nextNodeId}`);
-          // Fallback or error handling
-        }
+        setCurrentQuestionIndex(2); // Check bleeding
+      }
+    } else if (currentQuestionIndex === 1) {
+      if (!answer) {
+        navigate('/guide/cardiac-arrest');
+        onClose();
+      } else {
+        navigate('/guide/seizure'); // Recovery position
+        onClose();
+      }
+    } else if (currentQuestionIndex === 2) {
+      if (answer) {
+        navigate('/guide/bleeding');
+        onClose();
+      } else {
+        // Default to dashboard or another question
         onClose();
       }
     }
   };
-
-  if (!isOpen) return null;
 
   return (
     <AnimatePresence>
@@ -70,54 +78,30 @@ export function TriageModal({ isOpen, onClose }: TriageModalProps) {
               <X className="w-6 h-6" />
             </button>
 
-            {loading ? (
-              <div className="flex justify-center py-8">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            <div className="flex flex-col items-center text-center gap-6 py-4">
+              <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
+                <AlertCircle className="w-8 h-8" />
               </div>
-            ) : error ? (
-              <div className="text-center text-red-500 py-8">
-                {error}
-              </div>
-            ) : currentNodeId && triageFlow ? (
-              <div className="flex flex-col items-center text-center gap-6 py-4">
-                <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center">
-                  <AlertCircle className="w-8 h-8" />
-                </div>
-                
-                <h3 className="text-2xl font-bold text-slate-900">
-                  {triageFlow.nodes[currentNodeId].question}
-                </h3>
+              
+              <h3 className="text-2xl font-bold text-slate-900">
+                {questions[currentQuestionIndex].text}
+              </h3>
 
-                {triageFlow.nodes[currentNodeId].type === 'yesno' ? (
-                  <div className="grid grid-cols-2 gap-4 w-full">
-                    <Button 
-                      onClick={() => handleAnswer(false)}
-                      className="bg-slate-100 text-slate-700 hover:bg-slate-200 h-14 text-lg"
-                    >
-                      No
-                    </Button>
-                    <Button 
-                      onClick={() => handleAnswer(true)}
-                      className="bg-blue-600 hover:bg-blue-700 h-14 text-lg"
-                    >
-                      Yes
-                    </Button>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-2 gap-3 w-full">
-                    {Object.entries(triageFlow.nodes[currentNodeId].options || {}).map(([key, value]) => (
-                      <Button
-                        key={key}
-                        onClick={() => handleAnswer(key)}
-                        className="bg-slate-100 text-slate-700 hover:bg-slate-200 h-auto py-3 text-sm capitalize"
-                      >
-                        {key}
-                      </Button>
-                    ))}
-                  </div>
-                )}
+              <div className="grid grid-cols-2 gap-4 w-full">
+                <Button 
+                  onClick={() => handleAnswer(false)}
+                  className="bg-slate-100 text-slate-700 hover:bg-slate-200 h-14 text-lg"
+                >
+                  No
+                </Button>
+                <Button 
+                  onClick={() => handleAnswer(true)}
+                  className="bg-blue-600 hover:bg-blue-700 h-14 text-lg"
+                >
+                  Yes
+                </Button>
               </div>
-            ) : null}
+            </div>
           </motion.div>
         </div>
       )}
