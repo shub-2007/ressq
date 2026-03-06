@@ -1,4 +1,4 @@
-import { Step } from '@/data/emergencies';
+import { Step } from '@/types';
 import { cn } from '@/lib/utils';
 import { AlertTriangle, PackageOpen } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
