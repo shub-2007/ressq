@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { emergencies, EmergencyGuide, Step } from '@/data/emergencies';
+import { EmergencyGuide } from '@/data/emergencies';
+import { useEmergencies } from '@/hooks/useEmergencies';
 import { Layout } from '@/components/layout/Layout';
 import { StepCard } from '@/components/StepCard';
 import { Button } from '@/components/ui/Button';
-import { ChevronLeft, ChevronRight, User, Baby, AlertCircle } from 'lucide-react';
+import { ChevronLeft, User, Baby, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Guide() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { emergencies, loading, error } = useEmergencies();
   
   const [emergency, setEmergency] = useState<EmergencyGuide | null>(null);
   const [stepIndex, setStepIndex] = useState(0);
@@ -17,13 +19,43 @@ export function Guide() {
   const [isNoKitMode, setIsNoKitMode] = useState(false);
 
   useEffect(() => {
-    const found = emergencies.find(e => e.id === id);
-    if (found) {
-      setEmergency(found);
+    if (emergencies.length > 0) {
+      const found = emergencies.find(e => e.id === id);
+      if (found) {
+        setEmergency(found);
+      }
     }
-  }, [id]);
+  }, [id, emergencies]);
 
-  if (!emergency) return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <Layout showCallBar={true}>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout showCallBar={true}>
+        <div className="flex items-center justify-center min-h-screen text-red-500">
+          Error loading data: {error}
+        </div>
+      </Layout>
+    );
+  }
+
+  if (!emergency) {
+    return (
+      <Layout showCallBar={true}>
+        <div className="flex items-center justify-center min-h-screen text-slate-500">
+          Emergency guide not found.
+        </div>
+      </Layout>
+    );
+  }
 
   // Initial Screen: Signs & Age Selection
   if (isChild === null) {

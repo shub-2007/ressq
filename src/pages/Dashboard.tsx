@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Search, User, Stethoscope } from 'lucide-react';
-import { emergencies } from '@/data/emergencies';
+import { useEmergencies } from '@/hooks/useEmergencies';
 import { EmergencyCard } from '@/components/EmergencyCard';
 import { Layout } from '@/components/layout/Layout';
 import { TriageModal } from '@/components/TriageModal';
@@ -9,10 +9,31 @@ import { Button } from '@/components/ui/Button';
 export function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [isTriageOpen, setIsTriageOpen] = useState(false);
+  const { emergencies, loading, error } = useEmergencies();
 
   const filteredEmergencies = emergencies.filter(e => 
     e.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="flex items-center justify-center min-h-screen text-red-500">
+          Error loading data: {error}
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
